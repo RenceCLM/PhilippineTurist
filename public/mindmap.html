@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mind Map</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="/css/mindmap_style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/konva@8.3.5/konva.min.js"></script>
+</head>
+<body>
+    <h1>Mind Map</h1>
+    <div id="container"></div>
+    <div id="search-bar" class="hidden">
+        <input type="text" id="search-input" placeholder="Search for images..." />
+        <button id="prev-image">◀</button>
+        <img id="search-image" src="" alt="Search result" />
+        <button id="next-image">▶</button>
+    </div>
+    <script src="/js/mindmap.js"></script>
+</body>
+</html>
