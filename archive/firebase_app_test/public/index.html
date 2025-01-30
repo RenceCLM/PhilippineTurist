@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Index Page</title>
+</head>
+<body>
+    <h1>Welcome to the Index Page</h1>
+    <a href="/mindmap">Go to Mindmap</a>
+
+    <h2>Save Mindmap</h2>
+    <form id="mindmapForm">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+        <button type="submit">Save</button>
+    </form>
+
+    <h2>Retrieve Mindmap</h2>
+    <form id="retrieveForm">
+        <label for="mindmapId">Mindmap ID:</label>
+        <input type="text" id="mindmapId" name="mindmapId" required>
+        <button type="submit">Retrieve</button>
+    </form>
+
+    <div id="mindmapData"></div>
+
+    <script>
+        document.getElementById('mindmapForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const title = document.getElementById('title').value;
+
+            fetch('/api/mindmap', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ title })
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert('Mindmap saved successfully');
+                document.getElementById('title').value = '';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+
+        document.getElementById('retrieveForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const mindmapId = document.getElementById('mindmapId').value;
+
+            fetch(`/api/mindmap/${mindmapId}`)
+            .then(response => response.json())
+            .then(data => {
+                const mindmapDataDiv = document.getElementById('mindmapData');
+                mindmapDataDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
