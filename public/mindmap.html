@@ -157,6 +157,9 @@
                             draggable: true,
                         });
 
+                        // Save the image source URL in the node attributes
+                        image.setAttr('imageSrc', imageUrl);
+
                         layer.add(image);
                         layer.draw();
 
@@ -202,10 +205,16 @@
             });
 
             document.getElementById('saveButton').addEventListener('click', () => {
-                const elements = layer.getChildren().map(node => ({
-                    type: node.getClassName(),
-                    attrs: node.getAttrs()
-                }));
+                const elements = layer.getChildren().map(node => {
+                    const attrs = node.getAttrs();
+                    if (node.getClassName() === 'Image') {
+                        attrs.imageSrc = node.getAttr('imageSrc');
+                    }
+                    return {
+                        type: node.getClassName(),
+                        attrs: attrs
+                    };
+                });
 
                 fetch('/save', {
                     method: 'POST',
