@@ -1,0 +1,2 @@
+make the image appear where the textbox is and then the textbox should be above it
+make the textbox an element like the image (zooming is weird)
