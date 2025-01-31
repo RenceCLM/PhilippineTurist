@@ -11,10 +11,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 
 // Initialize SQLite database
-const db = new sqlite3.Database(':memory:');
+const db = new sqlite3.Database(path.join(__dirname, 'mindmap.db'));
 
 db.serialize(() => {
-    db.run("CREATE TABLE elements (id INTEGER PRIMARY KEY, type TEXT, attrs TEXT)");
+    db.run("CREATE TABLE IF NOT EXISTS elements (id INTEGER PRIMARY KEY, type TEXT, attrs TEXT)");
 });
 
 // Serve the index.html file
