@@ -1,9 +1,7 @@
 import { setupStage } from './stageSetup.js';
-import { createTextNode, editTextNode, createImageElement } from './nodes.js';
-import { setupEventHandlers, attachNodeEvents } from './events.js';
-import { selectNode, deselectNode, getSelectedNode } from './selection.js';
-import { drawLine } from './lines.js';
+import { attachTextEvents, attachImageObjectEvent, setupEventHandlers } from './events.js';
 import { state } from './state.js'; // Import the shared state
+import { deleteItem } from './deleteItem.js';
 
 function updateZoomLevel(scale) {
     const zoomLevelDiv = document.getElementById('zoomLevel');
@@ -57,6 +55,7 @@ function loadElements() {
                 let node;
                 if (element.type === 'Text') {
                     node = new Konva.Text(element.attrs);
+                    attachTextEvents(node);
                 } else if (element.type === 'Image') {
                     const imageObj = new Image();
                     imageObj.src = element.attrs.imageSrc;
@@ -64,14 +63,18 @@ function loadElements() {
                         ...element.attrs,
                         image: imageObj
                     });
+                    attachImageObjectEvent(node)
                 } else if (element.type === 'Line') {
                     node = new Konva.Line(element.attrs);
                 }
-                attachNodeEvents(node, layer);
                 layer.add(node);
             });
             layer.draw();
             showStatus('Elements loaded successfully');
+        })
+        .catch(error => {
+            console.error('Error loading elements:', error);
+            showStatus('Error loading elements');
         });
 }
 const { stage, layer } = setupStage('container');
@@ -80,9 +83,9 @@ setupEventHandlers(stage, layer, updateZoomLevel, updateCursorPosition, state.no
 
 document.getElementById('saveButton').addEventListener('click', saveElements);
 document.getElementById('loadButton').addEventListener('click', loadElements);
-
+document.getElementById('deleteButton').addEventListener('click', deleteItem);
 // Auto-save every 5 seconds
-setInterval(saveElements, 5000);
+// setInterval(saveElements, 5000);
 
 // Load elements when the page loads
 window.onload = loadElements;

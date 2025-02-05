@@ -1,39 +1,39 @@
-import { startDrawLineNode } from "./lines";
+import { startDrawLineNode } from "./lines.js";
+import { state } from "./state.js";
 
-let selectedNode = null;
 let selectionRect = null;
 
 export function selectNode(node) {
-    if (selectedNode) {
+    if (state.selectedNode) {
         deselectNode();
     }
-    selectedNode = node;
+    state.selectedNode = node;
     selectionRect = createRectForNode(node);
     const layer = node.getLayer();
     layer.add(selectionRect);
     selectionRect.moveToBottom();
     layer.draw();
+
+    document.getElementById('deleteButton').style.display = 'block';
+
 }
 
 export function deselectNode() {
-    if (selectedNode) {
-        selectedNode.stroke(null); // Remove highlight
-        selectedNode.strokeWidth(0);
-        selectedNode.draw();
-        selectedNode = null;
+    if (state.selectedNode) {
+        state.selectedNode.stroke(null); // Remove highlight
+        state.selectedNode.strokeWidth(0);
+        state.selectedNode.draw();
+        state.selectedNode = null;
     }
     if (selectionRect) {
         selectionRect.remove();
         selectionRect = null;
     }
-}
 
-export function getSelectedNode() {
-    return selectedNode;
+    document.getElementById('deleteButton').style.display = 'none';
 }
 
 function createRectForNode(node) {
-    console.log('Creating rect for text', node.width(), node.height(), node.x(), node.y(), node.getLayer());
     const strokeWidth = 20;
     const nodeWidth = node.width();
     const nodeHeight = node.height();
@@ -71,17 +71,18 @@ function createRectForNode(node) {
     });
 
     rect.on('click', function (evt) {
-        console.log("Clicked on rect");
+        // Prevent other elements from running their click event
+        evt.cancelBubble = true; // or evt.stopPropagation();
+    
         const shape = evt.target;
         const pos = {
             x: evt.evt.clientX,
             y: evt.evt.clientY
         };
         if (is_on_border(shape, pos)) {
-            statr(shape)
+            startDrawLineNode(shape);
         }
-    })
-
+    });
     return rect;
 }
 

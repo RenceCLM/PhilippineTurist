@@ -1,3 +1,4 @@
 export const state = {
-    nodesToDrawLineBetween: []
+    nodesToDrawLineBetween: [],
+    selectedNode: null,
 };

@@ -7,11 +7,11 @@ export function setupEventHandlers(stage, layer, updateZoomLevel, updateCursorPo
     let clickCount = 0;
 
     stage.on('click', (e) => {
-        console.log("clicked")
         console.log(nodesToDrawLineBetween)
         if (e.target === stage && nodesToDrawLineBetween.length === 0) {
             deselectNode();
         } else if (nodesToDrawLineBetween.length === 1) {
+            console.log(nodesToDrawLineBetween.length, nodesToDrawLineBetween)
             if (e.target === stage) {
                 const pointerPosition = stage.getPointerPosition();
                 const transform = stage.getAbsoluteTransform().copy();
@@ -21,6 +21,7 @@ export function setupEventHandlers(stage, layer, updateZoomLevel, updateCursorPo
             } else {
                 nodesToDrawLineBetween.push(e.target);
             }
+            console.log("drawLine", nodesToDrawLineBetween)
             drawLine(layer, nodesToDrawLineBetween[0], nodesToDrawLineBetween[1]);
             nodesToDrawLineBetween.length = 0;
         }
@@ -78,7 +79,7 @@ export function setupEventHandlers(stage, layer, updateZoomLevel, updateCursorPo
     });
 }
 
-export function attachNodeEvents(node) {
+export function attachTextEvents(node) {
     let clickTimeout = null;
 
     node.on('click', (e) => {
@@ -97,6 +98,23 @@ export function attachNodeEvents(node) {
             clickTimeout = setTimeout(() => {
                 selectNode(node);
             }, 200); // Adjust the delay as needed
+        }
+    });
+}
+
+export function attachImageObjectEvent(node) {
+    let clickTimeout = null;
+
+    node.on('click', (e) => {
+        if (clickTimeout) {
+            clearTimeout(clickTimeout);
+            clickTimeout = null;
+        }
+
+        if (e.evt.detail === 1) {
+            clickTimeout = setTimeout(() => {
+                selectNode(node);
+            }, 300); // Adjust the delay as needed
         }
     });
 }

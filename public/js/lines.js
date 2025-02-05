@@ -27,6 +27,8 @@ export function drawLine(layer, startNode, endNodeOrCoord) {
     return line;
 }
 
-export function startDrawLineNode(layer, node) {
+export function startDrawLineNode(node) {
+    console.log("startDrawLineNode has RUN")
+    console.log(node)
     state.nodesToDrawLineBetween.push(node);
 }
