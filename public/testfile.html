@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konva Rect Hover Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/konva@8.3.5/konva.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <script>
+        // Create the stage
+        var stage = new Konva.Stage({
+            container: 'container',
+            width: window.innerWidth,
+            height: window.innerHeight
+        });
+
+        // Create a layer
+        var layer = new Konva.Layer();
+        stage.add(layer);
+
+        // Create a rectangle with transparent fill
+        var rect = new Konva.Rect({
+            x: stage.width() / 2 - 50,
+            y: stage.height() / 2 - 50,
+            width: 100,
+            height: 100, 
+            fill: 'transparent',
+            stroke: 'black',
+            strokeWidth: 10 // Increased stroke width
+        });
+        layer.add(rect);
+
+        // Create a text element
+        var text = new Konva.Text({
+            x: 20,
+            y: 20,
+            text: 'Hello, Konva!',
+            fontSize: 24,
+            fontFamily: 'Calibri',
+            fill: 'black'
+        });
+        layer.add(text);
+
+        // Function to create a rectangle that perfectly fits the text
+        function createRectForText(textNode) {
+            const strokeWidth = 5;
+            var textWidth = textNode.width();
+            var textHeight = textNode.height();
+            var textX = textNode.x();
+            var textY = textNode.y();
+
+            var rect = new Konva.Rect({
+                x: textX - strokeWidth / 2,
+                y: textY - strokeWidth / 2,
+                width: textWidth + strokeWidth,
+                height: textHeight + strokeWidth,
+                fill: 'transparent',
+                stroke: 'black',
+                strokeWidth: strokeWidth
+            });
+
+            // Add mousemove event listener
+            rect.on('mousemove', function (evt) {
+                var shape = evt.target;
+                var pos = {
+                    x: evt.evt.clientX,
+                    y: evt.evt.clientY
+                }
+                if (is_on_border(shape, pos)) {
+                    shape.stroke('red');
+                } else {
+                    shape.stroke('black');
+                }
+                layer.draw();
+            });
+
+            rect.on('mouseout', function () {
+            rect.stroke('black');
+            layer.draw();
+            });
+            
+
+            return rect;
+        }
+
+        // Create a rectangle that fits the text
+        var textRect = createRectForText(text);
+        layer.add(textRect);
+
+        layer.draw();
+
+        // Function to check if cursor is on the border
+        function is_on_border(shape, pos) {
+            const buffer = shape.strokeWidth() / 10;
+            var x = pos.x;
+            var y = pos.y;
+            var shapeX = shape.x();
+            var shapeY = shape.y();
+            var shapeWidth = shape.width();
+            var shapeHeight = shape.height();
+            var strokeWidth = shape.strokeWidth();
+
+            // buffer doesn't work for outside the box since it relies on rect.on('mousemove')
+            var isOnLeftBorder = x >= shapeX - buffer && x <= shapeX + strokeWidth + buffer;
+            var isOnRightBorder = x >= shapeX + shapeWidth - strokeWidth - buffer && x <= shapeX + shapeWidth + buffer;
+            var isOnTopBorder = y >= shapeY - buffer && y <= shapeY + strokeWidth + buffer;
+            var isOnBottomBorder = y >= shapeY + shapeHeight - strokeWidth - buffer && y <= shapeY + shapeHeight + buffer;
+
+            return isOnLeftBorder || isOnRightBorder || isOnTopBorder || isOnBottomBorder;
+        }
+
+        // Add mousemove event listener
+        rect.on('mousemove', function (evt) {
+            var shape = evt.target;
+            var pos = stage.getPointerPosition();
+            if (is_on_border(shape, pos)) {
+                shape.stroke('red');
+            } else {
+                shape.stroke('black');
+            }
+            layer.draw();
+        });
+
+        // Add mouseout event listener to reset color
+        rect.on('mouseout', function () {
+            rect.stroke('black');
+            layer.draw();
+        });
+    </script>
+</body>
+</html>

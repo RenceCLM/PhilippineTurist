@@ -11,7 +11,16 @@ var stage = new Konva.Stage({
 var layer = new Konva.Layer();
 stage.add(layer);
 
+var selectionBox = new Konva.Rect({
+    stroke: 'blue',
+    strokeWidth: 6,
+    dash: [10, 5],
+    visible: false,
+});
+layer.add(selectionBox);
+
 var clickTimeout;
+var selectedNode = null;
 
 function createTextNode(text, x, y) {
     var textNode = new Konva.Text({
@@ -40,6 +49,8 @@ function createTextNode(text, x, y) {
         if (e.evt.detail === 3) {
             clearTimeout(clickTimeout);
             createImageElement(textNode);
+        } else {
+            selectNode(textNode);
         }
     });
 }
@@ -149,9 +160,93 @@ function createImageElement(textNode) {
 
             textNode.y(textNode.y() - image.height() / 2);
             layer.draw();
+
+            image.on('click', () => {
+                selectNode(image);
+            });
         };
         imageObj.src = imageUrl;
     });
+}
+
+function selectNode(node) {
+    if (selectedNode) {
+        selectedNode.stroke(null);
+        selectedNode.off('mouseover mouseout');
+    }
+    selectedNode = node;
+    selectedNode.stroke('blue');
+    selectedNode.strokeWidth(10);
+    updateSelectionBox();
+    layer.draw();
+
+    selectedNode.on('mouseover', () => {
+        selectedNode.stroke('red');
+        layer.draw();
+    });
+
+    selectedNode.on('mouseout', () => {
+        selectedNode.stroke('blue');
+        layer.draw();
+    });
+}
+
+function deselectNode() {
+    if (selectedNode) {
+        selectedNode.stroke(null);
+        selectedNode.off('mouseover mouseout');
+        selectedNode = null;
+        selectionBox.visible(false);
+        layer.draw();
+    }
+}
+
+function updateSelectionBox() {
+    if (selectedNode) {
+        const box = selectedNode.getClientRect();
+        selectionBox.position({
+            x: box.x,
+            y: box.y,
+        });
+        selectionBox.size({
+            width: box.width,
+            height: box.height,
+        });
+        selectionBox.visible(true);
+    } else {
+        selectionBox.visible(false);
+    }
+}
+
+selectionBox.on('mouseover', (e) => {
+    if (selectedNode) {
+        const pointerPosition = stage.getPointerPosition();
+        const box = selectedNode.getClientRect();
+        if (!isPointerInsideNode(pointerPosition, box)) {
+            selectedNode.stroke('red');
+            layer.draw();
+        }
+    }
+});
+
+selectionBox.on('mouseout', (e) => {
+    if (selectedNode) {
+        const pointerPosition = stage.getPointerPosition();
+        const box = selectedNode.getClientRect();
+        if (!isPointerInsideNode(pointerPosition, box)) {
+            selectedNode.stroke('blue');
+            layer.draw();
+        }
+    }
+});
+
+function isPointerInsideNode(pointer, box) {
+    return (
+        pointer.x >= box.x &&
+        pointer.x <= box.x + box.width &&
+        pointer.y >= box.y &&
+        pointer.y <= box.y + box.height
+    );
 }
 
 stage.on('dblclick', (e) => {
@@ -196,6 +291,12 @@ stage.on('mousemove', (e) => {
     transform.invert();
     var pos = transform.point(pointerPosition);
     updateCursorPosition(pos.x, pos.y);
+});
+
+stage.on('click', (e) => {
+    if (e.target === stage) {
+        deselectNode();
+    }
 });
 
 function updateZoomLevel(scale) {
@@ -262,6 +363,8 @@ function loadElements() {
                         if (e.evt.detail === 3) {
                             clearTimeout(clickTimeout);
                             createImageElement(node);
+                        } else {
+                            selectNode(node);
                         }
                     });
                 } else if (element.type === 'Image') {
@@ -270,6 +373,9 @@ function loadElements() {
                     node = new Konva.Image({
                         ...element.attrs,
                         image: imageObj
+                    });
+                    node.on('click', () => {
+                        selectNode(node);
                     });
                 }
                 layer.add(node);

@@ -27,6 +27,14 @@ app.get('/mindmap', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'mindmap.html'));
 });
 
+app.get('/testfile', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'testfile.html'));
+});
+
+app.get('/old_mindmap', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'old_mindmap.html'));
+});
+
 // Save elements to the database
 app.post('/save', (req, res) => {
     const elements = req.body.elements;
