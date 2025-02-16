@@ -3,41 +3,42 @@ body {
     padding: 0;
     overflow: hidden;
     background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
 }
-#controls {
+
+#controls-container {
     position: absolute;
     top: 10px;
     left: 10px;
-    z-index: 100;
 }
-#status {
+
+#status-container {
     position: absolute;
     top: 10px;
     right: 10px;
-    z-index: 100;
     background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 5px;
+    color: #fff;
+    padding: 5px 10px;
     border-radius: 3px;
     display: none;
 }
-#zoomLevel {
+
+#zoom-level-container {
     position: absolute;
     bottom: 10px;
     right: 10px;
-    z-index: 100;
     background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 5px;
+    color: #fff;
+    padding: 5px 10px;
     border-radius: 3px;
 }
-#cursorPosition {
+
+#cursor-position-container {
     position: absolute;
     bottom: 10px;
     left: 10px;
-    z-index: 100;
     background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 5px;
+    color: #fff;
+    padding: 5px 10px;
     border-radius: 3px;
 }

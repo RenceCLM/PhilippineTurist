@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://unpkg.com/konva@9.3.18/konva.min.js"></script>
+        <meta charset="utf-8" />
+        <title>Konva Editable Text on html5 canvas Demo</title>
+        <link rel="stylesheet" href="css/mindmap_style.css">
+    </head>
+    <body>
+        <div id="controls-container">                                 <!-- Control panel: top-left -->
+            <button id="save-button">Save</button>
+            <button id="load-button">Load</button>
+            <button id="delete-button" style="display: none;">Delete</button>
+        </div> 
+        <div id="status-container"></div>                             <!-- Status panel: top-right -->
+        <div id="zoom-level-container">Zoom: 100%</div>               <!-- Zoom: bottom-right -->
+        <div id="cursor-position-container">X: 0, Y: 0</div>          <!-- Coordinates: bottom-left -->
+        <div id="main-canvas-container"></div>                        <!-- Main Canvas Container -->
+        <script type="module" src="js/main.js"></script>
+    </body>
+</html>

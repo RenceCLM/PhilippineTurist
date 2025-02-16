@@ -1,20 +1,20 @@
-import { setupStage } from './stageSetup.js';
-import { attachTextEvents, attachImageObjectEvent, setupEventHandlers } from './events.js';
-import { state } from './state.js'; // Import the shared state
+import { setupStage } from './old/stageSetup.js';
+import { attachTextEvents, attachImageObjectEvent, setupEventHandlers } from './old/events.js';
+import { state } from './old/state.js'; // Import the shared state
 import { deleteItem } from './deleteItem.js';
 
 function updateZoomLevel(scale) {
-    const zoomLevelDiv = document.getElementById('zoomLevel');
+    const zoomLevelDiv = document.getElementById('zoom-level-container');
     zoomLevelDiv.innerText = `Zoom: ${(scale * 100).toFixed(2)}%`;
 }
 
 function updateCursorPosition(x, y) {
-    const cursorPositionDiv = document.getElementById('cursorPosition');
+    const cursorPositionDiv = document.getElementById('cursor-position-container');
     cursorPositionDiv.innerText = `X: ${x.toFixed(2)}, Y: ${y.toFixed(2)}`;
 }
 
 function showStatus(message) {
-    const statusDiv = document.getElementById('status');
+    const statusDiv = document.getElementById('status-container');
     statusDiv.innerText = message;
     statusDiv.style.display = 'block';
     setTimeout(() => {
